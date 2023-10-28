@@ -35,10 +35,10 @@ class CamApp(App):
         layout.add_widget(self.verification_label)
 
         # Load tensorflow/keras model
-        self.model = tf.keras.models.load_model('siamesemodel.h5', custom_objects={'L1Dist':L1Dist})
+        self.model = tf.keras.models.load_model('begin.h5', custom_objects={'L1Dist':L1Dist})
 
         # Setup video capture device
-        self.capture = cv2.VideoCapture(4)
+        self.capture = cv2.VideoCapture(0)
         Clock.schedule_interval(self.update, 1.0/33.0)
         
         return layout
@@ -48,7 +48,9 @@ class CamApp(App):
 
         # Read frame from opencv
         ret, frame = self.capture.read()
-        frame = frame[120:120+250, 200:200+250, :]
+        if not ret:
+            return
+        frame = frame[120:800+800, 200:800+850, :]
 
         # Flip horizontall and convert image to texture
         buf = cv2.flip(frame, 0).tostring()
@@ -80,7 +82,7 @@ class CamApp(App):
         # Capture input image from our webcam
         SAVE_PATH = os.path.join('application_data', 'input_image', 'input_image.jpg')
         ret, frame = self.capture.read()
-        frame = frame[120:120+250, 200:200+250, :]
+        frame = frame[120:800+800, 200:800+850, :]
         cv2.imwrite(SAVE_PATH, frame)
 
         # Build results array
