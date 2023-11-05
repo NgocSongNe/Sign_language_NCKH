@@ -35,11 +35,11 @@ class CamApp(App):
         layout.add_widget(self.verification_label)
 
         # Load tensorflow/keras model
-        self.model = tf.keras.models.load_model('begin.h5', custom_objects={'L1Dist':L1Dist})
+        self.model = tf.keras.models.load_model('13.h5', custom_objects={'L1Dist':L1Dist})
 
         # Setup video capture device
         self.capture = cv2.VideoCapture(0)
-        Clock.schedule_interval(self.update, 1.0/33.0)
+        Clock.schedule_interval(self.update, 0.1/33.0)
         
         return layout
 
@@ -80,26 +80,26 @@ class CamApp(App):
         verification_threshold = 0.8
 
         # Capture input image from our webcam
-        SAVE_PATH = os.path.join('application_data', 'input_image', 'input_image.jpg')
+        SAVE_PATH = os.path.join('Data', 'input_image')
         ret, frame = self.capture.read()
         frame = frame[120:800+800, 200:800+850, :]
         cv2.imwrite(SAVE_PATH, frame)
 
         # Build results array
         results = []
-        for image in os.listdir(os.path.join('application_data', 'verification_images')):
-            input_img = self.preprocess(os.path.join('application_data', 'input_image', 'input_image.jpg'))
-            validation_img = self.preprocess(os.path.join('application_data', 'verification_images', image))
+        for image in os.listdir(os.path.join('Data')):
+            input_img = self.preprocess(os.path.join('Cam on', 'xin chao','Xin loi'))
+            validation_img = self.preprocess(os.path.join(image))
             
             # Make Predictions 
-            result = self.model.predict(list(np.expand_dims([input_img, validation_img], axis=1)))
+            result = self.model.predict(list(np.expand_dims([input_img], axis=1)))
             results.append(result)
         
         # Detection Threshold: Metric above which a prediciton is considered positive 
         detection = np.sum(np.array(results) > detection_threshold)
         
         # Verification Threshold: Proportion of positive predictions / total positive samples 
-        verification = detection / len(os.listdir(os.path.join('application_data', 'verification_images'))) 
+        verification = detection / len(os.listdir(os.path.join('application_data'))) 
         verified = verification > verification_threshold
 
         # Set verification text 
