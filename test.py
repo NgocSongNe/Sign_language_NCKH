@@ -80,12 +80,12 @@ model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(actions.shape[0], activation='softmax'))
 model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
-
+model.load_weights('13.h5')
 # 1. New detection variables
 sequence = []
 sentence = []
 threshold = 0.8
-model.load_weights('13.h5')
+
 cap = cv2.VideoCapture(0) 
 # Set mediapipe model 
 with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
@@ -102,7 +102,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
        # nhận diện cơ thể 
         
         # 2. Prediction logic
-        keypoints = extract_keypoints(results) # xuất ra array các keypoints cơ thể (mấy cái đốt í)
+        keypoints = extract_keypoints(results) # xuất ra array các keypoints cơ thể 
 #         sequence.insert(0,keypoints)
 #         sequence = sequence[:30]
         sequence.append(keypoints)
